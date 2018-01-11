@@ -1,6 +1,7 @@
 use std::fmt;
 use strum::IntoEnumIterator;
 
+use cell::Cell;
 use direction::{Direction, ShiftType};
 
 pub struct Board {
@@ -89,6 +90,21 @@ impl Board {
         self.generate_move_board(player) & mask != 0
     }
 
+    pub fn get_valid_moves(&self, player: Player) -> Vec<Cell> {
+        let board = self.generate_move_board(player);
+        let mut result = Vec::new();
+
+        for index in 0..64 {
+            let mask = (1 as u64) << index;
+
+            if board & mask != 0 {
+                result.push(Cell::from_index(index));
+            }
+        }
+
+        result
+    }
+
     pub fn get_score(&self, player: Player) -> u32 {
         match player {
             Player::White => self.white_board.count_ones(),
@@ -128,7 +144,7 @@ impl Board {
     }
 
     fn resolve_move(&mut self, board_index: u8, player: Player) {
-        let (mut friendly_board, mut enemy_board) = match player {
+        let (friendly_board, enemy_board) = match player {
             Player::White => (&mut self.white_board, &mut self.black_board),
             Player::Black => (&mut self.black_board, &mut self.white_board),
         };

@@ -7,9 +7,9 @@ pub struct Cell {
 
 impl fmt::Display for Cell {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let row = (self.board_index / 8) + ('1' as u8);
-        let column = (self.board_index % 8) + ('A' as u8);
-        write!(f, "{}{}", row, column)
+        let row = ((self.board_index / 8) + ('1' as u8)) as char;
+        let col = ((self.board_index % 8) + ('A' as u8)) as char;
+        write!(f, "{}{}", col, row)
     }
 }
 
@@ -27,12 +27,28 @@ impl Cell {
         Cell::from_index(board_index)
     }
 
-    pub fn from_algebraic_notation(input: &String) -> Cell {
+    pub fn from_algebraic_notation(input: &String) -> Result<Cell, ()> {
         debug_assert!(input.len() == 2);
 
         let bytes = input.to_uppercase().into_bytes();
         let row = bytes[1] - ('1' as u8);
         let column = bytes[0] - ('A' as u8);
-        Cell::from_grid(row, column)
+
+        if row < 8 && column < 8 {
+            Ok(Cell::from_grid(row, column))
+        } else {
+            Err(())
+        }
+    }
+
+    pub fn get_board_index(&self) -> u8 {
+        self.board_index
+    }
+
+    pub fn get_grid_location(&self) -> (u8, u8) {
+        let row = self.board_index / 8;
+        let column = self.board_index % 8;
+
+        (row, column)
     }
 }
