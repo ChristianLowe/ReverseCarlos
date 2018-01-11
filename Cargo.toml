@@ -1,0 +1,8 @@
+[package]
+name = "reversi"
+version = "0.1.0"
+authors = ["Christian Lowe <christianlowe.cl@gmail.com>"]
+
+[dependencies]
+strum = "0.8.0"
+strum_macros = "0.8.0"
