@@ -4,7 +4,7 @@ version = "0.3.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "reversi"
+name = "reverse-carlos"
 version = "0.1.0"
 dependencies = [
  "strum 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
