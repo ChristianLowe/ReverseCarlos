@@ -1,5 +1,5 @@
 
-#[derive(EnumIter, Copy, Clone)]
+#[derive(EnumIter, Clone, Copy)]
 pub enum Direction {
     Up,
     Down,
@@ -19,9 +19,8 @@ pub enum ShiftType {
 
 impl Direction {
     /* Bit board information from https://www.hanshq.net/othello.html */
-    // TODO try changing &self and *self to just "self"
-    pub fn mask(&self) -> u64 {
-        match *self {
+    pub fn mask(self) -> u64 {
+        match self {
             Direction::Up => 0xFFFFFFFFFFFFFFFF,
             Direction::Down => 0xFFFFFFFFFFFFFFFF,
             Direction::Left => 0xFEFEFEFEFEFEFEFE,
@@ -33,9 +32,8 @@ impl Direction {
         }
     }
 
-    pub fn shift_type(&self) -> ShiftType {
-        /* Negative numbers represent left shifting, positive numbers represent right shifting */
-        match *self {
+    pub fn shift_type(self) -> ShiftType {
+        match self {
             Direction::Up => ShiftType::Left(8),
             Direction::Down => ShiftType::Right(8),
             Direction::Left => ShiftType::Left(1),
