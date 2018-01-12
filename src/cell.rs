@@ -31,14 +31,16 @@ impl Cell {
         debug_assert!(input.len() == 2);
 
         let bytes = input.to_uppercase().into_bytes();
+
+        if bytes[0] > 'H' as u8 || bytes[0] < 'A' as u8
+        || bytes[1] > '9' as u8 || bytes[1] < '1' as u8 {
+            return Err(());
+        }
+
         let row = bytes[1] - ('1' as u8);
         let column = bytes[0] - ('A' as u8);
 
-        if row < 8 && column < 8 {
-            Ok(Cell::from_grid(row, column))
-        } else {
-            Err(())
-        }
+        Ok(Cell::from_grid(row, column))
     }
 
     pub fn get_board_index(&self) -> u8 {
