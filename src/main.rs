@@ -15,12 +15,37 @@ pub mod board;
 static INPUT_ERROR_MSG: &'static str = "Please enter your input in algebraic format. E.g. 'A5'.";
 
 fn main() {
+    let mut player_turn = Player::White;
     let mut board = Board::new();
-    println!("{}", board);
 
     loop {
+        println!("{}", board);
+
+        let valid_moves = board.get_valid_moves(player_turn);
+
+        if valid_moves.len() == 0 {
+            let white_score = board.get_score(Player::White);
+            let black_score = board.get_score(Player::Black);
+
+            print!("Game Over! ");
+            if white_score > black_score {
+                println!("White wins!");
+            } else if black_score > white_score {
+                println!("Black wins!");
+            } else {
+                println!("It's a tie!");
+            }
+            println!("\n===FINAL SCORE===");
+            println!("White: {}, Black: {}", white_score, black_score);
+            return;
+        }
+
+        match player_turn {
+            Player::White => println!("White's turn! (You control the X's)."),
+            Player::Black => println!("Black's turn! (You control the O's)."),
+        }
+
         print!("Possible moves: ");
-        let valid_moves = board.get_valid_moves(Player::White);
         for valid_move in valid_moves {
             print!("{} ", valid_move);
         }
@@ -40,14 +65,12 @@ fn main() {
 
         input.pop(); // Discard the newline character
 
-        let cell = Cell::from_algebraic_notation(&input);
-
-        match cell {
+        match Cell::from_algebraic_notation(&input) {
             Ok(cell) => {
                 let (row, column) = cell.get_grid_location();
 
-                if board.is_valid_move(row, column, Player::White) {
-                    board.make_move(row, column, Player::White);
+                if board.is_valid_move(row, column, player_turn) {
+                    board.make_move(row, column, player_turn);
                 } else {
                     println!("Invalid move.");
                     continue;
@@ -59,6 +82,9 @@ fn main() {
             }
         }
 
-        println!("{}", board);
+        match player_turn {
+            Player::White => player_turn = Player::Black,
+            Player::Black => player_turn = Player::White,
+        }
     }
 }

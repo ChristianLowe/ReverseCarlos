@@ -15,9 +15,10 @@ pub enum CellState {
     Empty,
 }
 
+#[derive(Clone, Copy, PartialEq)]
 pub enum Player {
     White,
-    Black
+    Black,
 }
 
 impl fmt::Display for Board {
